@@ -5,9 +5,9 @@
 这里首先要介绍一下**贝叶斯派**和**频率派**。举个栗子：一个病毒检测试剂，如果受检者为阳性，误检率为1%，如果受检者为阴性，误检率为2%；若人群中某个人的检测结果为阳性，则此人携带病毒的概率是多少。概率派观点是，此人极有可能使病毒携带者；从贝叶斯的角度来看，我们还需要知道另外一个参数，即人群中携带病毒的概率（先验概率）。
 **极大似然估计**是**频率派**的主要观点，核心思想是对于待估参数$\theta$，寻找$\hat{\theta}$使得$X=x$发生的概率最大
 $$L(\theta|x)=f(x|\theta)=f(x_1,x_2...x_n|\theta)=\prod_{i=1}^n f(x_i|\theta)$$
-$$\hat{\theta}=argmax_{\theta}\ L(\theta|x)$$
+$$\hat{\theta}=\argmax_{\theta}\ L(\theta|x)$$
 **最大后验估计**是**贝叶斯派**的主要观点，它简化了**贝叶斯估计**
-$$\hat{\theta}=argmax_{\theta}\ \pi (\theta|x) = argmax_{\theta}\ \frac {f(x|\theta) \pi(\theta)} {m(x)} = argmax_{\theta}\ f(x|\theta) \pi(\theta) = argmax_{\theta}\{log[f(x|\theta)] + log[\pi(\theta)]\}$$
+$$\hat{\theta}=\argmax_{\theta}\ \pi (\theta|x) = \argmax_{\theta}\ \frac {f(x|\theta) \pi(\theta)} {m(x)} = \argmax_{\theta}\ f(x|\theta) \pi(\theta) = \argmax_{\theta}\{log[f(x|\theta)] + log[\pi(\theta)]\}$$
 >贝叶斯估计与极大似然估计在思想上有很大的不同,代表着统计学中频率学派和贝叶斯学派对统计的不同认识。其实，可以简单地把两者联系起来，假设先验分布是均匀分布，取后验概率最大，就能从贝叶斯估计得到极大似然估计。
 ## 1.1.2 统计学习分类
 * 基本分类：监督式学习，无监督式学习，强化学习，半监督学习，主动学习。

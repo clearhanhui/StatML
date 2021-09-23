@@ -36,10 +36,10 @@ $$L(Y,f(X))=\begin{cases}
 $$R_{exp}(f)=E[L(Y,f(X)]=E_X\sum^K_{k=1}[L(c_k,f(X))P(c_k)|X)\tag{4.8}$$
 为了使期望风险最小化，只需：
 $$\begin{aligned} f(x) 
-&=arg\ \underset{y\in \mathcal Y}{min}\sum^K_{k=1}L(c_k,y)P(c_k|X=x)\\ 
-&=arg\ \underset{y\in \mathcal Y}{min}\sum^K_{k=1}P(y\neq c_k|X=x)\\ 
-&= arg\ \underset{y\in \mathcal Y}{min}\sum^K_{k=1}(1-P(y=c_k|X=x)P(X=x))\\
-&= arg\ \underset{y\in \mathcal Y}{max}\sum^K_{k=1}P(y=c_k|X=x)
+&=\argmin_{y\in \mathcal Y}\sum^K_{k=1}L(c_k,y)P(c_k|X=x)\\ 
+&=\argmin_{y\in \mathcal Y}\sum^K_{k=1}P(y\neq c_k|X=x)\\ 
+&=\argmin_{y\in \mathcal Y}\sum^K_{k=1}(1-P(y=c_k|X=x)P(X=x))\\
+&=\argmin_{y\in \mathcal Y}\sum^K_{k=1}P(y=c_k|X=x)
 \end{aligned}\tag{4.9}$$
 # 4.2 朴素贝叶斯法的参数估计
 ## 4.2.1 极大似然估计

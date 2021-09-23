@@ -2,9 +2,9 @@
 # 2.1 感知机
 感知机是一种二分类模型，其输入为实例的特征向量，输出为$\pm1$。感知机模型是神经网络和支持向量机的基础。
 **定义**：假设输入空间是$X \subseteq R^n$输出空间是$Y \subseteq \{+1,-1\}$。输入$x \in X$表示实例的特征向量，对应于输入空间的点，输出$y \in Y$表示手里的类别，由输入空间到输出空间的如下函数：
-$$f(x)=sgn(w \cdot x + b)$$
+$$f(x)=\mathrm{sgn}(w \cdot x + b)$$
 称为感知机。其中$w$和$b$成为感知机模型参数，$w \in R^n$称为权值，$b \in R$是偏置，$w \cdot x$表示$w$和$x$的内积，$sgn$是符号函数(或$sign$)，即：
-$$sgn(x) = \begin {cases}  
+$$\mathrm{sgn}(x) = \begin {cases}  
 +1 & x \leq 0 \\
 -1 & x < 0
 \end{cases}$$
