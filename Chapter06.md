@@ -252,7 +252,7 @@ $$
 $$
 \begin{equation}
 \begin{aligned}
-L(w+\delta)-L(w) &=\sum_{x, y} \tilde{P}(x, y) \log P_{w+\delta}(y \mid x)-\sum_{x, y} \tilde{P}(x, y) \log P_{w}(y \mid x) \\
+L(w+\delta)-L(w) &=\sum_{x, y} \tilde{P}(x, y) \log P_{w+\delta}(y | x)-\sum_{x, y} \tilde{P}(x, y) \log P_{w}(y | x) \\
 &=\sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)-\sum_{x} \tilde{P}(x) \log \frac{Z_{w+\delta}(x)}{Z_{w}(x)}
 \end{aligned}
 \end{equation}
@@ -262,42 +262,42 @@ $$
 \begin{equation}
 \begin{aligned}
 L(w+\delta)-L(w) & \geqslant \sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)+1-\sum_{x} \tilde{P}(x) \frac{Z_{w+\delta}(x)}{Z_{w}(x)} \\
-&=\sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)+1-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y \mid x) \exp \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)
+&=\sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)+1-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y | x) \exp \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)
 \end{aligned}
 \end{equation}
 $$
 将右端记为： $A(\delta | w)$，为$L(w+\delta)-L(w)$ 的下界。  
-引进 $f^{\#}(x, y)=\sum_{i} f_{i}(x, y)$ ，表示所有特征在 $(x, y)$ 出现的次数。这样， $A(\delta \mid w)$ 可以改写为
+引进 $f^{\#}(x, y)=\sum_{i} f_{i}(x, y)$ ，表示所有特征在 $(x, y)$ 出现的次数。这样， $A(\delta | w)$ 可以改写为
 $$
 \begin{equation}
 \begin{aligned}
-A(\delta \mid w)=& \sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)+1-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y \mid x) \exp \left(f^{\#}(x, y) \sum_{i=1}^{n} \frac{\delta_{i} f_{i}(x, y)}{f^{\#}(x, y)}\right)
+A(\delta | w)=& \sum_{x, y} \tilde{P}(x, y) \sum_{i=1}^{n} \delta_{i} f_{i}(x, y)+1-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y | x) \exp (f^{\#}(x, y) \sum_{i=1}^{n} \frac{\delta_{i} f_{i}(x, y)}{f^{\#}(x, y)})
 \end{aligned}
 \end{equation}
 $$
 利用指数函数的凸性以及对任意 $i$ , 有 $\frac{f_{i}(x, y)}{f^{\#}(x, y)} \geqslant 0$ 且 $\sum \limits _{i=1}^{n} \frac{f_{i}(x, y)}{f^{\#}(x, y)}=1$ 这一事实, 根据 Jensen 不等式, 得到
 $$
 \begin{equation}
-\exp \left(\sum_{i=1}^{n} \frac{f_{i}(x, y)}{f^{\#}(x, y)} \delta_{i} f^{\#}(x, y)\right) \leqslant \sum_{i=1}^{n} \frac{f_{i}(x, y)}{f^{\#}(x, y)} \exp \left(\delta_{i} f^{\#}(x, y)\right)
+\exp (\sum_{i=1}^{n} \frac{f_{i}(x, y)}{f^{\#}(x, y)} \delta_{i} f^{\#}(x, y)) \leqslant \sum_{i=1}^{n} \frac{f_{i}(x, y)}{f^{\#}(x, y)} \exp (\delta_{i} f^{\#}(x, y))
 \end{equation}
 $$
-将不等式右端记为$B(\delta|w)$。于是有：
+将不等式右端记为 $B(\delta|w)$ 。于是有：
 $$
 \begin{equation}
 L(w+\delta)-L(w) \geqslant A(\delta|w) \geqslant B(\delta|w)
 \end{equation}
 $$
 
-求 $B(\delta \mid w)$ 对 $\delta_{i}$ 的偏导数:
+求 $B(\delta | w)$ 对 $\delta_{i}$ 的偏导数:
 $$
 \begin{equation}
-\frac{\partial B(\delta \mid w)}{\partial \delta_{i}}=\sum_{x, y} \tilde{P}(x, y) f_{i}(x, y)-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y \mid x) f_{i}(x, y) \exp \left(\delta_{i} f^{\#}(x, y)\right)
+\frac{\partial B(\delta | w)}{\partial \delta_{i}}=\sum_{x, y} \tilde{P}(x, y) f_{i}(x, y)-\sum_{x} \tilde{P}(x) \sum_{y} P_{w}(y | x) f_{i}(x, y) \exp (\delta_{i} f^{\#}(x, y))
 \end{equation}
 $$
 在式 $(6.32)$ 里, 除 $\delta_{i}$ 外不含任何其他变量。令偏导数 0 得到
 $$
 \begin{equation}
-\sum_{x, y} \tilde{P}(x) P_{w}(y \mid x) f_{i}(x, y) \exp \left(\delta_{i} f^{\#}(x, y)\right)=E_{\tilde{P}}\left(f_{i}\right)
+\sum_{x, y} \tilde{P}(x) P_{w}(y | x) f_{i}(x, y) \exp (\delta_{i} f^{\#}(x, y))=E_{\tilde{P}}(f_{i})
 \end{equation}
 $$
 于是, 依次对 $\delta_{i}$ 求解方程 $(32)$ 可以求出 $\delta$ 。
