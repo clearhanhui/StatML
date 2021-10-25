@@ -1,10 +1,12 @@
+
+
 ## pytorch
 
 #### scatter
 
 > `Tensor.scatter_`(*dim*, *index*, *src*, *reduce=None*) → torch.Tensor
 
-Writes all values from the tensor `src` into `self` at the indices specified in the `index` tensor.
+Writes all values from the tensor `src` into `self` at the indices specified in the `index` tensor. 
 
 ```python
 self[index[i][j][k]][j][k] = src[i][j][k]  # if dim == 0
@@ -22,7 +24,7 @@ Parameters
 Example
 
 ```python
->>> t = torch.full((2, 4), 2.)
+>>> t = torch.full((2, 4), 2.) 
 >>> index = torch.tensor([[2], [3]])
 >>> t.scatter_(1, index, 1.23, reduce='add')
 tensor([[2.0000, 2.0000, 3.2300, 2.0000],
@@ -38,6 +40,7 @@ tensor([[2.0000, 2.0000, 3.2300, 2.0000],
 Gathers values along an axis specified by dim.
 
 ```python
+# for 3 dim tensor, it op like this
 out[i][j][k] = input[index[i][j][k]][j][k]  # if dim == 0
 out[i][j][k] = input[i][index[i][j][k]][k]  # if dim == 1
 out[i][j][k] = input[i][j][index[i][j][k]]  # if dim == 2
@@ -45,14 +48,18 @@ out[i][j][k] = input[i][j][index[i][j][k]]  # if dim == 2
 
 Parameters
 
-- **input** (*Tensor*) – the source tensor
-- **dim** (*int*) – the axis along which to index
+- **input** ([*Tensor*](https://pytorch.org/docs/stable/tensors.html#torch.Tensor)) – the source tensor
+
+- **dim** ([*int*](https://docs.python.org/3/library/functions.html#int)) – the axis along which to index
+
 - **index** (*LongTensor*) – the indices of elements to gather
+
+  > `index` and `input` must have the same dimensions
 
 Keyword Arguments
 
-- **sparse_grad** (*bool*)*,* *optional*) – If `True`, gradient w.r.t. `input` will be a sparse tensor.
-- **out** (*Tensor*)*,* *optional*) – the destination tensor
+- **sparse_grad** ([*bool*](https://docs.python.org/3/library/functions.html#bool)*,* *optional*) – If `True`, gradient w.r.t. `input` will be a sparse tensor.
+- **out** ([*Tensor*](https://pytorch.org/docs/stable/tensors.html#torch.Tensor)*,* *optional*) – the destination tensor
 
 Example：
 
@@ -66,7 +73,7 @@ tensor([[ 1,  1],
 
 
 
-## pytorch_scatter
+## pytorch_scatter 
 
 #### scatter
 
@@ -90,7 +97,39 @@ Parameters
 - **dim_size** – If `out` is not given, automatically create output with size `dim_size` at dimension `dim`. If `dim_size` is not given, a minimal sized output tensor according to `index.max() + 1` is returned.
 - **reduce** – The reduce operation (`"sum"`, `"mul"`, `"mean"`, `"min"` or `"max"`). (default: `"sum"`)
 
+```python
+>>> from torch_scatter import scatter
+>>> src = torch.randn(10, 6, 64)
+>>> index = torch.tensor([0, 1, 0, 1, 2, 1])
+>>> # Broadcasting in the first and last dim.
+>>> out = scatter(src, index, dim=1, reduce="sum")
+>>> print(out.size())
+torch.Size([10, 3, 64])
+
+>>> index = torch.tensor([[1], [0]])
+>>> scatter(src, index, reduce="sum")
+tensor([[0., 8.],
+        [8., 0.]])
+
+>>> index = torch.LongTensor([[1, 1, 1, 1],
+...                           [1, 1, 0, 0]])
+>>> scatter(t, index, dim=0, reduce="sum")
+tensor([[0., 0., 2., 2.],
+        [4., 4., 2., 2.]])
+```
+
+> there is an process of broadcast in function `scatter`
+
+```python
+>>> index.expand_as(index)
+tensor([[1, 1, 1, 1],
+        [0, 0, 0, 0]])
+```
+
+
+
 #### 4sparse-matrix  
+
 `segment_coo`, `segment_scr`
 
 
@@ -98,17 +137,22 @@ Parameters
 ## tensorflow
 
 #### gather
-> tf.gather(params, indices, validate_indices=None, axis=None, batch_dims=0, name=None)
+> tf.gather(params, indices, validate_indices=None, axis=None, batch_dims=0, name=None) 
 
 Gather slices from `params` axis `axis` according to `indices`.
 
-| `params`           | The `Tensor` from which to gather values. Must be at least rank `axis + 1`. |
+| Args               |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| `params`           | The `Tensor` from which to gather values. Must be at least rank `axis + 1`. |
 | `indices`          | The index `Tensor`. Must be one of the following types: `int32`, `int64`. The values must be in range `[0, params.shape[axis])`. |
 | `validate_indices` | **Deprecated**, does nothing. Indices are always validated on CPU, never validated on GPU. **Caution:** On CPU, if an out of bound index is found, an error is raised. On GPU, if an out of bound index is found, a 0 is stored in the corresponding output value. |
 | `axis`             | A `Tensor`. Must be one of the following types: `int32`, `int64`. The `axis` in `params` to gather `indices` from. Must be greater than or equal to `batch_dims`. Defaults to the first non-batch dimension. Supports negative indexes. |
 | `batch_dims`       | An `integer`. The number of batch dimensions. Must be less than or equal to `rank(indices)`. |
 | `name`             | A name for the operation (optional).                         |
+
+> The `params` may also have any shape.
+>
+> 
 
 ![tf-gather](img/tf_gather.png "tf_gather")
 
@@ -120,12 +164,57 @@ Gather slices from `params` axis `axis` according to `indices`.
 >>> tf.gather(params, indices=[3,1]).numpy()
 array([[30., 31., 32.],
        [10., 11., 12.]], dtype=float32)
+
 >>> tf.gather(params, indices=[2,1], axis=1).numpy()
 array([[ 2.,  1.],
        [12., 11.],
        [22., 21.],
        [32., 31.]], dtype=float32)
+
+>>> tf.gather(params, indices=[[1,2],[0,1]]).numpy()
+array([[[10., 11., 12.],
+        [20., 21., 22.]],
+       [[ 0.,  1.,  2.],
+        [10., 11., 12.]]], dtype=float32)
 ```
+
+**`batch_dim`**
+
+```python
+>>> params = tf.constant([
+...     [0, 0, 1, 0, 2],
+...     [3, 0, 0, 0, 4],
+...     [0, 5, 0, 6, 0]])
+>>> indices = tf.constant([
+...     [2, 4],
+...     [0, 4],
+...     [1, 3]])
+>>> tf.gather(params, indices, axis=1, batch_dims=1).numpy()
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+this is equivalent to
+
+```python
+>>> def manually_batched_gather(params, indices, axis):
+...   batch_dims=1
+...   result = []
+...   for p,i in zip(params, indices):
+...     r = tf.gather(p, i, axis=axis-batch_dims)
+...     result.append(r)
+...   return tf.stack(result)
+...
+>>> manually_batched_gather(params, indices, axis=1).numpy()
+array([[1, 2],
+       [3, 4],
+       [5, 6]])
+```
+
+
+
+<!-- ![gather_batch](img/tf_gather_batch.png) -->
 
 #### unsorted_segment_*OP*
 
@@ -227,7 +316,7 @@ Reduces `input_tensor` along the dimensions given in `axis`. Unless `keepdims` i
 | `keepdims`     | If true, retains reduced dimensions with length 1.           |
 | `name`         | A name for the operation (optional).                         |
 
-
+没有 index
 
 ## paddle
 
@@ -245,8 +334,10 @@ Parameters
 ```python
 >>> x = paddle.to_tensor(np.array([[1,2],[3,4],[5,6]]))
 >>> index = paddle.to_tensor(np.array([0,1]))
->>> output = paddle.gather(x, index, axis=0)
-[[1,2],[3,4]]
+>>> paddle.gather(x, index, axis=0)
+Tensor(shape=[2, 2], dtype=int32, place=CPUPlace, stop_gradient=True,
+       [[1, 2],
+        [3, 4]])
 ```
 
 #### gather_nd
@@ -257,9 +348,27 @@ Parameters
 
 - **x** (*Tensor*) – The input Tensor which it’s data type should be bool, float32, float64, int32, int64.
 - **index** (*Tensor*) – The index input with rank > 1, index.shape[-1] <= input.rank. Its dtype should be int32, int64.
-- **name** (*str**,* *optional*) – The default value is None. Normally there is no need for user to set this property. For more information, please refer to [Name](https://www.paddlepaddle.org.cn/documentation/docs/en/api_guides/low_level/program_en.html#api-guide-name) .
+- **name** (*str*, *optional*) – The default value is None. Normally there is no need for user to set this property. For more information, please refer to [Name](https://www.paddlepaddle.org.cn/documentation/docs/en/api_guides/low_level/program_en.html#api-guide-name) .
 
-#### scatter
+```python
+>>> x = [[[ 0,  1,  2,  3],
+...       [ 4,  5,  6,  7],
+...       [ 8,  9, 10, 11]],
+...      [[12, 13, 14, 15],
+...       [16, 17, 18, 19],
+...       [20, 21, 22, 23]]]
+>>> x = paddle.to_tensor(np.array(x))
+>>> x.shape
+[2, 3, 4]
+>>> index = paddle.to_tensor(np.array([[1,2]])) # [x[1, 2, :]]
+>>> paddle.gather_nd(x, index)
+Tensor(shape=[1, 4], dtype=int32, place=CPUPlace, stop_gradient=True,
+       [[20, 21, 22, 23]])
+```
+
+
+
+#### scatter 
 
 > paddle.scatter(*x*, *index*, *updates*, *overwrite=True*, *name=None*)  → paddle.Tensor
 
@@ -313,11 +422,53 @@ output2 = paddle.scatter(x, index, updates, overwrite=True)
 
 ## PGL
 
+#### segment_OP
+
+OP can be one of `sum`, `mean`, `max`, `min`,`softmax`, `padding`
+
+>  segment_sum(data, segment_ids, name=None)
+
+Parameters:
+
+* **data** (*Tensor*): A tensor, available data type float32, float64.
+* **segment_ids** (*Tensor*): A 1-D tensor, which have the same size with the first dimension of input data. Available data type is int32, int64.
+
+```python
+>>> import paddle
+>>> import pgl
+>>> data = paddle.to_tensor([[1, 2, 3], [3, 2, 1], [4, 5, 6]], dtype='float32')
+>>> segment_ids = paddle.to_tensor([0, 0, 1], dtype='int32')
+>>> out = pgl.math.segment_sum(data, segment_ids)
+[[4., 4., 4.], [4., 5., 6.]]
 ```
-import paddle
-import pgl
-data = paddle.to_tensor([[1, 2, 3], [3, 2, 1], [4, 5, 6]], dtype='float32')
-segment_ids = paddle.to_tensor([0, 0, 1], dtype='int32')
-out = pgl.math.segment_sum(data, segment_ids)
-#Outputs: [[4., 4., 4.], [4., 5., 6.]]
+
+
+
+> segment_padding(data, segment_ids)
+
+This operator padding the input elements which with the same index in `'segment_ids'` to a common length ,and reshape its into `[uniq_segment_id, max_padding, dim]`.
+
+Parameters:
+
+* **data** (tensor): a tensor, available data type float32, float64.
+
+* **segment_ids** (tensor): a 1-d tensor, which have the same size with the first dimension of input data. Available data type is int32, int64.
+
+
+
+Returns:
+
+* **output** (Tensor): the padding result with shape [uniq_segment_id, max_padding, dim].
+
+* **seq_len** (Tensor): the numbers of elements grouped same segment_ids
+
+* **index**: The index of elements for gather_nd or scatter_nd operation
+
+```python
+>>> data = paddle.to_tensor([[1, 2, 3], [3, 2, 1], [4, 5, 6]], dtype='float32')
+>>> segment_ids = paddle.to_tensor([0, 0, 1], dtype='int64')
+>>> output, seq_len, index = pgl.math.segment_padding(data, segment_ids)
 ```
+
+
+

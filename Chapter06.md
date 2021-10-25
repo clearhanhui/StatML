@@ -302,6 +302,32 @@ $$
 $$
 于是, 依次对 $\delta_{i}$ 求解方程 $(32)$ 可以求出 $\delta$ 。
 
+# 6.4 逻辑回归和最大熵模型的关系
+对于最大熵模型，假设$Y$有2个取值0，1；X是n维向量，且特征函数满足：
+$$
+\begin{equation}
+f_{i}(\mathbf{x}, y)= 
+\begin{cases}
+x_{i}, & \text { if } y=1 \\ 
+0, & \text { others }
+\end{cases}
+\end{equation}
+$$
+那么对于 $Y=1$ 有:
+$$
+\begin{equation}
+P\left(Y=1 | \mathbf{x}\right)=\frac{e^{\sum_{i=1}^{n} w_{i} x_{i}}}{1+e^{\sum_{i=1}^{n} w_{i} x_{i}}}=\frac{e^{\mathbf{w}^{T} \mathbf{x}}}{1+e^{\mathbf{w}^{T} \mathbf{x}}}
+\end{equation}
+$$
+对于 $Y=0$ 有：
+$$
+\begin{equation}
+P\left(Y=0 | \mathbf{x}\right)=\frac{1}{1+e^{\mathbf{w}^{T} \mathbf{x}}}
+\end{equation}
+$$
+所以，逻辑斯蒂回归的本质为二分类下选取了某个特征函数的最大熵模型，同样解释了为什么要用Sigmoid函数以及为什么要用极大似然估计去计算损失函数。
+
+
 ### 牛顿法
 牛顿法和拟牛顿法按照标准算法流程优化$-L_{\tilde{P}}(P_{w})$即可。  
 下一章介绍。
