@@ -91,6 +91,7 @@
 | rm       | Remove files from the working tree and from the index |      |
 | -------- | ----------------------------------------------------- | ---- |
 | --cached | only remove from the index                            |      |
+| -r       | recursive                                             |      |
 |          |                                                       |      |
 
 
