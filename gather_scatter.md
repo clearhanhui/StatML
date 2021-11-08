@@ -128,11 +128,13 @@ tensor([[1, 1, 1, 1],
 
 
 
-#### 4sparse-matrix  
+#### sorted_segment  
 
 `segment_coo`, `segment_scr`
 
+***Note***: index must be sorted, and `segment_soo()` is usually faster that `scatter()`
 
+reduce support:  `"sum"`, `"mean"`, `"min"` or `"max"`, default `'sum'`
 
 ## tensorflow
 
@@ -242,13 +244,11 @@ array([[1, 2],
 | `name`         | A name for the operation (optional).                         |
 
 ~~~python
-```python
 >>> data = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
 >>> segment_ids = tf.constant([0, 1, 0])
 >>> tf.math.unsorted_segment_sum(data, segment_ids, num_segments=2)
 [[ 5, 5, 5, 5],
  [5, 6, 7, 8]]
-```
 ~~~
 
 * unsorted_segment_prod
